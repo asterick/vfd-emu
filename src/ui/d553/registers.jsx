@@ -14,7 +14,7 @@ module.exports = React.createClass({
             <div className="values">
                 <div className="register">
                     <label>Acc</label><span>{cpu.acc.toString(16).toUpperCase()}</span>
-                    <label>Flag</label><span>{cpu.flag.toString(16).toUpperCase()}</span>
+                    <label>TC</label><span>{cpu.tc}</span>
                 </div>
 
                 <div className="register">
@@ -34,6 +34,10 @@ module.exports = React.createClass({
                 <div className="register">
                     <label>S</label><span>{cpu.s.toString(16).toUpperCase()}</span>
                     <label>Y</label><span>{cpu.y.toString(16).toUpperCase()}</span>
+                </div>
+
+                <div className="register">
+                    <label>Flag</label><span>{cpu.flag.toString(16).toUpperCase()}</span>
                 </div>
             </div>
             <div className="flags">

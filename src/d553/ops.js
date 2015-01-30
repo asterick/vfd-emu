@@ -272,7 +272,6 @@ module.exports = {
 
     // ---- Jump, Call and Return ----
     JMP: function (imm) {
-        debugger ;
         this.pc = imm;
     },
     CAL: function (imm) {

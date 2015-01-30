@@ -1,5 +1,4 @@
-var Table = require("./table"),
-    Ops = require("./ops");
+var Table = require("./table");
 
 function D553(rom) {
     this.ROM_MASK = rom.length - 1;
@@ -11,6 +10,7 @@ function D553(rom) {
     // Program cursor (stack treated as a ring buffer)
     this.pc_set = [0,0,0,0];
     this.sp = 0;
+    this.tc = 0;
 
     this.inputs  = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     this.outputs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -161,29 +161,33 @@ D553.prototype.clock = function (ticks) {
 };
 
 D553.prototype.interrupt = function () {
-    if (this.ie_ff) {
-        this.push();
-        this.pc = 0x3C;
-    } else {
-        this.int_ff = true;
-    }
+    this.int_ff = true;
 }
 
 D553.prototype.tick = function (cycles) {
-    this.overflow -= op.cycles;
-    this.tc -= op.cycles;
-
-    if (this.tc < 0) { this.tim_ff = true; }
+    this.overflow -= cycles;
+    if ((this.tc -= cycles) <= 0) { this.tim_ff = true; }
 };
 
 D553.prototype.step = function () {
+    // Interrupt logic (might be wrong)
+    if (this.ie_ff && this.int_ff) {
+        this.overflow -= 2;
+        this.push();
+        this.pc = 0x3C;
+        this.int_ff = false;
+    }
+
+    // Load instruction formation
     var inst = this.next(),
         data = inst,
         op = Table[data];
 
     this.tick(op.cycles);
 
-    if (!op) { throw new Error("Unknown opcode " + data.toString(16)); }
+    if (!op) {
+        throw new Error("Unknown opcode " + data.toString(16));
+    }
 
     for (var b = 1; b < op.bytes; b++) {
         data = (data << 8) | this.next();
@@ -192,7 +196,7 @@ D553.prototype.step = function () {
     var mask = (1 << op.immediate) - 1,
         imm = data & mask;
 
-    Ops[op.opcode].call(this, imm);
+    op.execute.call(this, imm);
 
     this.prev_op = inst;
 };

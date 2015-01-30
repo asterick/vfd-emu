@@ -1,3 +1,5 @@
+var ops = require("./ops");
+
 var table = {
     0x00: { opcode: "NOP", immediate:  0, bytes: 1, clocks: 1 },
     0x01: { opcode: "DI",  immediate:  0, bytes: 1, clocks: 1 },
@@ -81,10 +83,12 @@ Object.keys(table).forEach(function (index) {
     var entry = table[index],
         masked = entry.immediate - (entry.bytes - 1) * 8;
 
-    if (masked <= 0) { return ; }
+    entry.execute = ops[entry.opcode];
 
-    for (var i = (1 << masked) - 1; i > 0; i--) {
-        table[i+Number(index)] = entry;
+    if (masked > 0) {
+        for (var i = (1 << masked) - 1; i > 0; i--) {
+            table[i+Number(index)] = entry;
+        }
     }
 });
 
