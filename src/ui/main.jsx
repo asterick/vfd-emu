@@ -1,6 +1,6 @@
-var React = require("react"),
-    D553 = require("../d553"),
-    ROMS = require("../roms");
+var React = require("react");
+
+var Dracula = require("../machine/dracula");
 
 var Disassembler = require("./d553/disassembler.jsx"),
     RAM = require("./d553/ram.jsx"),
@@ -14,13 +14,13 @@ module.exports = React.createClass({
     getInitialState: function () {
         return {
             paused: true,
-            processor: new D553(ROMS.EPOCH_DRACULA)
+            game: new Dracula()
         }
     },
 
     update: function (t) {
         if (!this.state.paused) {
-            this.state.processor.clock(t);
+            this.state.game.tick(t);
             this.forceUpdate();
         }
     },
@@ -32,12 +32,12 @@ module.exports = React.createClass({
     },
 
     reset: function () {
-        this.state.processor.reset();
+        this.state.game.cpu.reset();
         this.forceUpdate();
     },
 
     step: function () {
-        this.state.processor.step();
+        this.state.game.cpu.step();
         this.forceUpdate();
     },
 
@@ -45,7 +45,7 @@ module.exports = React.createClass({
         var out = "";
         for (var p = 2; p < 9; p++) {
             for (var b = 0; b < 4; b++) {
-                out += (this.state.processor.input(p) >> b) & 1;
+                out += (this.state.game.cpu.input(p) >> b) & 1;
             }
         }
 
@@ -61,12 +61,12 @@ module.exports = React.createClass({
     render: function () {
         return <div className="D553">
                 <div className="column">
-                    <Disassembler cpu={this.state.processor} />
+                    <Disassembler cpu={this.state.game.cpu} />
                 </div>
                 <div className="column">
-                    <Registers cpu={this.state.processor} />
-                    <RAM cpu={this.state.processor} />
-                    <ROM cpu={this.state.processor} />
+                    <Registers cpu={this.state.game.cpu} />
+                    <RAM cpu={this.state.game.cpu} />
+                    <ROM cpu={this.state.game.cpu} />
                     <div className="controls">
                         <button onClick={this.toggle}>{this.state.paused ? "run": "pause"}</button>
                         <button onClick={this.step}>step</button>

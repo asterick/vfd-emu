@@ -1,6 +1,6 @@
 var Table = require("./table");
 
-function D553(rom) {
+function D553(rom, hook) {
     this.ROM_MASK = rom.length - 1;
 
     this.rom = rom;
@@ -172,7 +172,22 @@ D553.prototype.interrupt = function () {
     this.int_ff = true;
 }
 
+D553.prototype.audio = function (sample_rate, clock_rate, callback) {
+    this.sound_rate = sample_rate;
+    this.cpu_rate   = clock_rate;
+    this.sound_hook = callback;
+    this.sample_count = 0;
+}
+
 D553.prototype.tick = function (cycles) {
+    if (this.sound_hook) {
+        this.sample_count += cycles * this.sound_rate;
+        while (this.sample_count >= this.cpu_rate) {
+            this.sample_count -= this.cpu_rate;
+            this.sound_hook();
+        }
+    }
+
     this.overflow -= cycles;
     this.tc = Math.max(this.tc - cycles, 0);
     if (this.tc <= 0) { this.tim_ff = true; }
