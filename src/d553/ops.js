@@ -57,14 +57,14 @@ module.exports = {
         debugger;
         temp = this.acc;
         this.acc = this.ram[this.dp];
-        this.ram[dp] = temp;
+        this.ram[this.dp] = temp;
         this.dp_h ^= imm;
     },
     XMI: function(imm) {
         debugger;
         temp = this.acc;
         this.acc = this.ram[this.dp];
-        this.ram[dp] = temp;
+        this.ram[this.dp] = temp;
         this.dp_h ^= imm;
 
         this.dp_l = (this.dp_l + 1) & 0xF;
@@ -76,7 +76,7 @@ module.exports = {
         debugger;
         temp = this.acc;
         this.acc = this.ram[this.dp];
-        this.ram[dp] = temp;
+        this.ram[this.dp] = temp;
         this.dp_h ^= imm;
 
         this.dp_l = (this.dp_l - 1) & 0xF;
@@ -255,19 +255,19 @@ module.exports = {
     },
     REB: function(imm) {
         debugger;
-        this.output(4, this.input(4) & ~(1 << imm));
+        this.outputs[4] &= ~(1 << imm));
     },
     SEB: function(imm) {
         debugger;
-        this.output(4, this.input(4) | (1 << imm));
+        this.outputs[4] |= (1 << imm));
     },
     RPB: function(imm) {
         debugger;
-        this.output(this.dp_l, this.input(this.dp_l) & ~(1 << imm));
+        this.outputs[this.dp_l] &= ~(1 << imm);
     },
     SPB: function(imm) {
         debugger;
-        this.output(this.dp_l, this.input(this.p_l) | (1 << imm));
+        this.outputs[this.dp_l] |= (1 << imm);
     },
 
     // ---- Jump, Call and Return ----
@@ -275,17 +275,14 @@ module.exports = {
         this.pc = imm;
     },
     CAL: function (imm) {
-        this.push();
-        this.pc = imm;
+        this.call(imm);
     },
     JCP: function (imm) {
         debugger ;
-        this.pc = (this.pc & ~0x3F) | (op & 0x3F);
+        this.pc = (this.pc & ~0x3F) | imm;
     },
     CZP: function (imm) {
-        debugger ;
-        this.push();
-        this.pc = imm << 2;
+        this.call(imm << 2);
     },
     JPA: function(imm) {
         debugger;
@@ -293,10 +290,11 @@ module.exports = {
     },
     RT: function(imm) {
         debugger;
-        this.pop();
+        this.ret();
     },
     RTS: function(imm) {
         debugger;
+        this.ret();
         this.skip();
     },
 

@@ -12,8 +12,21 @@ function D553(rom) {
     this.sp = 0;
     this.tc = 0;
 
-    this.inputs  = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    this.outputs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    this.inputs      = [
+        0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0];
+    this.outputs     = [
+        0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0];
+    this.output_mask = [
+        0x0,0x0,0xF,0xF,
+        0xF,0xF,0xF,0xF,
+        0x7,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0];
 
     this.reset();
 }
@@ -129,11 +142,7 @@ D553.prototype.input = function (port) {
 };
 
 D553.prototype.output = function (port, value) {
-    if (port > 2 && port < 8) {
-        this.outputs[port] = value;
-    } else if (port == 9) {
-        this.outputs[9] = value & 7;
-    }
+    this.outputs[port] = this.output_mask[port] & value;
 };
 
 D553.prototype.next = function () {
@@ -142,13 +151,12 @@ D553.prototype.next = function () {
     return data;
 };
 
-D553.prototype.push = function () {
-    var cur = this.pc;
+D553.prototype.call = function (next) {
     this.sp = (this.sp + 1) & 3;
-    this.pc = cur;
+    this.pc = next;
 };
 
-D553.prototype.pop = function () {
+D553.prototype.ret = function () {
     this.sp = (this.sp - 1) & 3;
 };
 
@@ -166,15 +174,15 @@ D553.prototype.interrupt = function () {
 
 D553.prototype.tick = function (cycles) {
     this.overflow -= cycles;
-    if ((this.tc -= cycles) <= 0) { this.tim_ff = true; }
+    this.tc -= cycles;
+    if (this.tc <= 0) { this.tim_ff = true; }
 };
 
 D553.prototype.step = function () {
     // Interrupt logic (might be wrong)
     if (this.ie_ff && this.int_ff) {
         this.overflow -= 2;
-        this.push();
-        this.pc = 0x3C;
+        this.call(0x3C);
         this.int_ff = false;
     }
 
@@ -183,7 +191,7 @@ D553.prototype.step = function () {
         data = inst,
         op = Table[data];
 
-    this.tick(op.cycles);
+    this.tick(op.clocks);
 
     if (!op) {
         throw new Error("Unknown opcode " + data.toString(16));
@@ -208,7 +216,7 @@ D553.prototype.skip = function () {
         this.next();
     }
 
-    this.tick(op.cycles);
+    this.tick(op.bytes);
 };
 
 module.exports = D553;
