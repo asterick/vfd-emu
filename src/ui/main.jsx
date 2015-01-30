@@ -9,7 +9,7 @@ var Disassembler = require("./d553/disassembler.jsx"),
     Clock = require('../mixins/clock');
 
 module.exports = React.createClass({
-    mixins: [Clock(400000)],
+    mixins: [Clock(100000)],
 
     getInitialState: function () {
         return {

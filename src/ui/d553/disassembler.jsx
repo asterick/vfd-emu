@@ -27,6 +27,10 @@ module.exports = React.createClass({
                 code = op.opcode,
                 imm_mask = (1 << op.immediate) - 1;
 
+            if (!op) {
+                break ;
+            }
+
             while (bytes.length < op.bytes) {
                 var v = byte();
                 data = (data << 8) | v;
