@@ -1,7 +1,7 @@
 module.exports = {
     // ---- Load ----
     LI: function (imm) {
-        if (this.prev_op & 0xF0 !== 0x90) {
+        if ((this.prev_op & 0xF0) !== 0x90) {
             this.acc = imm;
         }
     },

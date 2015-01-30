@@ -14,12 +14,12 @@ module.exports = React.createClass({
             <div className="values">
                 <div className="register">
                     <label>Acc</label><span>{cpu.acc.toString(16).toUpperCase()}</span>
-                    <label>DP</label><span>{cpu.dp.toString(16).toUpperCase()}</span>
+                    <label>Flag</label><span>{cpu.flag.toString(16).toUpperCase()}</span>
                 </div>
 
                 <div className="register">
+                    <label>DP</label><span>{cpu.dp.toString(16).toUpperCase()}</span>
                     <label>TC</label><span>{cpu.tc}</span>
-                    <label>Flag</label><span>{cpu.flag.toString(16).toUpperCase()}</span>
                 </div>
 
                 <div className="register">

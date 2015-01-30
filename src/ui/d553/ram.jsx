@@ -8,11 +8,11 @@ module.exports = React.createClass({
         for (var i = 0; i < 0x80; i += 0x10) {
             var bytes = [];
             for (var b = 0; b < 0x10; b++) {
-                bytes.push(<span className="ram-byte">{this.props.cpu.ram[i+b].toString(16)}</span>)
+                bytes.push(<span className="ram-byte">{this.props.cpu.ram[i+b].toString(16).toUpperCase()}</span>)
             }
 
             lines.push(<div className="ram-bytes">
-                <span className="address">{i.toString(16)}</span>
+                <span className="address">{i.toString(16).toUpperCase()}</span>
                 {bytes}
             </div>);
         }

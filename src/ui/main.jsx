@@ -41,6 +41,23 @@ module.exports = React.createClass({
         this.forceUpdate();
     },
 
+    outputs: function () {
+        var out = "";
+        for (var p = 2; p < 9; p++) {
+            for (var b = 0; b < 4; b++) {
+                out += (this.state.processor.input(p) >> b) & 1;
+            }
+        }
+
+        var styles = {
+            display: "block",
+            margin: "8px 0",
+            textAlign: "center"
+        };
+
+        return <div style={styles}>{out}</div>;
+    },
+
     render: function () {
         return <div className="D553">
                 <div className="column">
@@ -55,6 +72,7 @@ module.exports = React.createClass({
                         <button onClick={this.step}>step</button>
                         <button onClick={this.reset}>reset</button>
                     </div>
+                    { this.outputs() }
                 </div>
             </div> ;
     }
