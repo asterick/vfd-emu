@@ -174,7 +174,7 @@ D553.prototype.interrupt = function () {
 
 D553.prototype.tick = function (cycles) {
     this.overflow -= cycles;
-    this.tc -= cycles;
+    this.tc = Math.max(this.tc - cycles, 0);
     if (this.tc <= 0) { this.tim_ff = true; }
 };
 

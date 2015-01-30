@@ -14,13 +14,14 @@ module.exports = React.createClass({
             <div className="values">
                 <div className="register">
                     <label>Acc</label><span>{cpu.acc.toString(16).toUpperCase()}</span>
-                    <label>TC</label><span>{cpu.tc}</span>
+                    <label>DP</label><span>{cpu.dp.toString(16).toUpperCase()}</span>
                 </div>
 
                 <div className="register">
-                    <label>DPh</label><span>{cpu.dp_h.toString(16).toUpperCase()}</span>
-                    <label>DPl</label><span>{cpu.dp_l.toString(16).toUpperCase()}</span>
+                    <label>TC</label><span>{cpu.tc}</span>
+                    <label>Flag</label><span>{cpu.flag.toString(16).toUpperCase()}</span>
                 </div>
+
                 <div className="register">
                     <label>W</label><span>{cpu.w.toString(16).toUpperCase()}</span>
                     <label>Z</label><span>{cpu.z.toString(16).toUpperCase()}</span>
@@ -34,10 +35,6 @@ module.exports = React.createClass({
                 <div className="register">
                     <label>S</label><span>{cpu.s.toString(16).toUpperCase()}</span>
                     <label>Y</label><span>{cpu.y.toString(16).toUpperCase()}</span>
-                </div>
-
-                <div className="register">
-                    <label>Flag</label><span>{cpu.flag.toString(16).toUpperCase()}</span>
                 </div>
             </div>
             <div className="flags">
