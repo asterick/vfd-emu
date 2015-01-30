@@ -1,7 +1,164 @@
 @import "normalize.scss";
 
+* { box-sizing: border-box; }
+
 body {
     font-family: "Lato", "Helvetica Neue", Helvetica, sans-serif;
     font-size: 16px;
     line-height: 20px;
+
+    width: 940px;
+    margin: 20px auto;
+}
+
+.column {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.D553 {
+    display: block;
+    font-family: monospace;
+
+    .dissassembly {
+        display: inline-block;
+        width: 30em;
+        background: #EEE;
+
+        .instruction {
+            display: block;
+            .address {
+                display: inline-block;
+                width: 4em;
+                text-align: right;
+                background: #FFE;
+                padding: 0 0.5em;
+            }
+            .bytes {
+                display: inline-block;
+                background: #FEF;
+
+                width: 6em;
+                padding: 0 0.5em;
+                text-align: left;
+
+                .byte {
+                    display: inline-block;
+                    width: 2em;
+                    text-align: center;
+                }
+            }
+            .operation {
+                display: inline-block;
+                text-align: left;
+                padding: 0 0.5em;
+            }
+        }
+    }
+
+    .registers {
+        .stack {
+            display: block;
+            counter-reset: pc-stack;
+            .pc {
+                display: block;
+                padding: 0 0.5em;
+                text-align: right;
+
+                &:before {
+                    display: inline;
+                    float: left;
+                    counter-increment: pc-stack;
+                    content: counter(pc-stack) ": ";
+                }
+
+                &:nth-of-type(1) {
+                    background: #FFF;
+                }
+                &:nth-of-type(2) {
+                    background: #EEF;
+                }
+                &:nth-of-type(3) {
+                    background: #DDF;
+                }
+                &:nth-of-type(4) {
+                    background: #CCF;
+                }
+            }
+        }
+        .values {
+            display: block;
+            background: #EFE;
+            .register {
+                display: block;
+                label {
+                    display: inline-block;
+                    width: 4em;
+                    text-align: right;
+                    margin: 0 0.5em;
+                }
+                span {
+                    display: inline-block;
+                    width: 4em;
+                    text-align: left;
+                    margin: 0 0.5em;
+                }
+            }
+        }
+        .flags {
+            display: block;
+            background: #EFF;
+            text-align: center;
+
+            .flag {
+                width: 15em;
+                text-align: left;
+
+                display: block;
+                margin: 0 auto;
+
+                label {
+                    display: inline-block;
+                    width: 4em;
+                    text-align: right;
+                    margin: 0 0.5em;
+                }
+                .checkbox {
+                    display: inline-block;
+                    text-align: center;
+                    width: 1em;
+
+                    &:before {
+                        display: inline;
+                        content: '\2610';
+                    }
+
+                    &[data-checked=true] {
+                        &:before {
+                            display: inline;
+                            content: '\2611';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .ram-table {
+        .ram-bytes {
+            display: block;
+
+            .address {
+                display: inline-block;
+                width: 3em;
+                text-align: right;
+                background: #FFE;
+                padding: 0 0.5em;
+            }
+            .ram-byte {
+                display: inline-block;
+                width: 1em;
+            }
+        }
+    }
 }
