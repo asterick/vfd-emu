@@ -142,6 +142,8 @@ D553.prototype.input = function (port) {
 };
 
 D553.prototype.output = function (port, value) {
+    if (this.scan_hook) { this.scan_hook(this.outputs); }
+
     this.outputs[port] = this.output_mask[port] & value;
 };
 
@@ -184,7 +186,7 @@ D553.prototype.tick = function (cycles) {
         this.sample_count += cycles * this.sound_rate;
         while (this.sample_count >= this.cpu_rate) {
             this.sample_count -= this.cpu_rate;
-            this.sound_hook();
+            this.sound_hook(this.outputs);
         }
     }
 

@@ -1,4 +1,4 @@
 var React = require("react"),
-    MainView = require("./ui/main.jsx");
+    MainView = require("./ui/AlienChase.jsx");
 
 React.render(React.createElement(MainView), document.body);
