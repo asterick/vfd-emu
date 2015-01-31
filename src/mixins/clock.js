@@ -7,10 +7,14 @@ module.exports = function (rate) {
         },
 
         componentDidMount: function () {
+            document.addEventListener("keydown", this.keydown);
+            document.addEventListener("keyup", this.keyup);
             this._schedule();
         },
 
         componentDidUnmount: function () {
+            document.removeEventListener("keydown", this.keydown);
+            document.removeEventListener("keyup", this.keyup);
             window.cancelAnimationFrame(this.state._animID);
         }
     }

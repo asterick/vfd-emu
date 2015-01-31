@@ -8,6 +8,7 @@ module.exports = {
     PAUSE: 19,
     CAPS_LOCK: 20,
     ESCAPE: 27,
+    SPACE: 32,
     PAGE_UP: 33,
     PAGE_DOWN: 34,
     END: 35,
