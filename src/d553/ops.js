@@ -347,12 +347,11 @@ module.exports = {
 
     // ---- Timer ----
     STM: function(imm) {
-        this.tim_ff = false;
         this.tc = (imm + 1) * 63;
     },
 
     TTM: function() {
-        if (this.tim_ff) {
+        if (!this.tc) {
             this.skip();
         }
     },

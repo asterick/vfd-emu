@@ -134,7 +134,6 @@ D553.prototype.reset = function () {
     this.carry_s_ff = false;
     this.int_ff = false;
     this.ie_ff = false;
-    this.tim_ff = false;
 };
 
 D553.prototype.input = function (port) {
@@ -192,7 +191,6 @@ D553.prototype.tick = function (cycles) {
 
     this.overflow -= cycles;
     this.tc = Math.max(this.tc - cycles, 0);
-    if (this.tc <= 0) { this.tim_ff = true; }
 };
 
 D553.prototype.step = function () {
