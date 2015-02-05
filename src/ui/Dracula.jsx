@@ -6,7 +6,8 @@ var Stream = require("../util/audiostream"),
     ROMS = require("../roms"),
     Keyboard = require("../util/keyboard");
 
-var Debugger = require("./d553/debugger.jsx");
+var Debugger = require("./d553/debugger.jsx"),
+    Display = require("./displays/Dracula.jsx");
 
 module.exports = React.createClass({
     mixins: [Clock(100000)],
@@ -98,31 +99,7 @@ module.exports = React.createClass({
     },
 
     vfd: function () {
-
-        var out = [];
-        for (var l = 0; l < 8; l++) {
-            var px = [];
-            for (var b = 0; b < 20; b++) {
-                var set = (this.state.frame[l] >> b) & 1,
-                    style = {
-                        background: set ? "#F00" : "#700",
-                        width: "10px",
-                        height: "10px",
-                        display: "inline-block"
-                    };
-
-                px.push(<div style={style} />);
-            }
-            out.push(<div style={{ height: "10px" }}>{px}</div>);
-        }
-
-        var styles = {
-            display: "block",
-            margin: "8px 0",
-            textAlign: "center"
-        };
-
-        return <div style={styles}>{out}</div>;
+        return <Display gates={this.state.frame}/>;
     },
 
     render: function () {
