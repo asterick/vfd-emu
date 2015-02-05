@@ -20,8 +20,6 @@ module.exports = React.createClass({
 
         cpu.audio(stream.sampleRate, 100000, this.output_sample);
 
-        setInterval(this.loop, 200);
-
         return {
             paused: true,
             cpu: cpu,
@@ -85,14 +83,6 @@ module.exports = React.createClass({
                 //this.state.frame[b] = pixels;
             }
         }
-    },
-
-    loop: function () {
-        for (var i = 0; i < 8; i++) {
-            this.state.frame[i] = (this.state.frame[i] >> 1) || 0x20000;
-        }
-
-        this.setState({ frame: this.state.frame });
     },
 
     update: function (t) {
