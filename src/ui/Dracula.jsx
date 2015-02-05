@@ -7,7 +7,7 @@ var Stream = require("../util/audiostream"),
     Keyboard = require("../util/keyboard");
 
 var Debugger = require("./d553/debugger.jsx"),
-    Display = require("./displays/Dracula.jsx");
+    Display = require("./Display.jsx");
 
 module.exports = React.createClass({
     mixins: [Clock(100000)],
@@ -19,6 +19,8 @@ module.exports = React.createClass({
         cpu.scan_hook = this.scan_frame;
 
         cpu.audio(stream.sampleRate, 100000, this.output_sample);
+
+        setInterval(this.loop, 200);
 
         return {
             paused: true,
@@ -80,9 +82,17 @@ module.exports = React.createClass({
 
         for (var b = 0; b < 8; b++) {
             if ((select >> b) & 1) {
-                this.state.frame[b] = pixels;
+                //this.state.frame[b] = pixels;
             }
         }
+    },
+
+    loop: function () {
+        for (var i = 0; i < 8; i++) {
+            this.state.frame[i] = (this.state.frame[i] >> 1) || 0x20000;
+        }
+
+        this.setState({ frame: this.state.frame });
     },
 
     update: function (t) {
@@ -98,15 +108,10 @@ module.exports = React.createClass({
         });
     },
 
-    vfd: function () {
-        return <Display gates={this.state.frame}/>;
-    },
-
     render: function () {
         return <div>
-            { this.vfd() }
-
             <Debugger cpu={this.state.cpu} paused={this.state.paused} onToggle={this.toggle} />
+            <Display display="media/EpochDracula.svg" gates={this.state.frame} />
         </div> ;
     }
 });
