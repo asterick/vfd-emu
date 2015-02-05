@@ -14,7 +14,7 @@ module.exports = React.createClass({
 
         this.props.gates.forEach(function (mask, i) {
             for (var b = 0; b < bits; b++) {
-                Array.prototype.forEach.call(node.querySelectorAll(".Gate" + i + " .Glyph" + b), function (panel) {
+                Array.prototype.forEach.call(node.querySelectorAll(".grid" + i + " .plate" + b), function (panel) {
                     panel.style.display = (mask & (1 << b)) ? "" : "none";
                 });
             }
@@ -44,7 +44,7 @@ module.exports = React.createClass({
 
     render: function () {
         return <div className="vfd">
-            { this.props.debug ? this.raw() : <ISVG src={this.props.display} /> }
+            { this.props.debug ? this.raw() : <ISVG className="regular" src={this.props.display} /> }
         </div>
     }
 });
