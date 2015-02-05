@@ -2,6 +2,7 @@ var React = require("react");
 
 var Stream = require("../util/audiostream"),
     Clock = require('../mixins/clock'),
+    ScanConverter = require('../mixins/scan'),
     D553 = require("../d553"),
     ROMS = require("../roms"),
     Keyboard = require("../util/keyboard");
@@ -10,13 +11,13 @@ var Debugger = require("./d553/debugger.jsx"),
     Display = require("./Display.jsx");
 
 module.exports = React.createClass({
-    mixins: [Clock(100000)],
+    mixins: [Clock(100000), ScanConverter],
 
     getInitialState: function () {
         var cpu = new D553(ROMS.EPOCH_DRACULA),
             stream = new Stream();
 
-        cpu.scan_hook = this.scan_frame;
+        cpu.scan_hook = this.hook_scan;
 
         cpu.audio(stream.sampleRate, 100000, this.output_sample);
 
@@ -24,7 +25,6 @@ module.exports = React.createClass({
             paused: true,
             cpu: cpu,
             audio: stream,
-            frame: [0,0,0,0,0,0,0,0]
         }
     },
 
@@ -70,21 +70,6 @@ module.exports = React.createClass({
         this.state.audio.output(outputs[8] >> 2);
     },
 
-    scan_frame: function (data) {
-        var select = (data[3] << 4) | data[2],
-            pixels = 0;
-
-        for (var i = 8; i >= 4; i--) {
-            pixels = (pixels << 4) | data[i];
-        }
-
-        for (var b = 0; b < 8; b++) {
-            if ((select >> b) & 1) {
-                //this.state.frame[b] = pixels;
-            }
-        }
-    },
-
     update: function (t) {
         if (!this.state.paused) {
             this.state.cpu.clock(t);
@@ -101,7 +86,7 @@ module.exports = React.createClass({
     render: function () {
         return <div>
             <Debugger cpu={this.state.cpu} paused={this.state.paused} onToggle={this.toggle} />
-            <Display display="media/EpochDracula.svg" gates={this.state.frame} />
+            <Display display="media/EpochDracula.svg" bits={28} gates={this.state.frame} />
         </div> ;
     }
 });
